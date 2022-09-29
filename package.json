@@ -1,0 +1,19 @@
+{
+  "name": "jdt-generator",
+  "version": "1.0.0",
+  "description": "A \"journal de travail\" generator for the EPFL ISAS-FSD team.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Azecko/jdt-generator.git"
+  },
+  "author": "Azecko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Azecko/jdt-generator/issues"
+  },
+  "homepage": "https://github.com/Azecko/jdt-generator#readme"
+}
