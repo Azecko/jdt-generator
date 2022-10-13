@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Azecko/jdt-generator#readme",
   "dependencies": {
+    "commander": "^9.4.1",
     "dotenv": "^16.0.2",
     "google-spreadsheet": "^3.3.0",
     "moment": "^2.29.4"
