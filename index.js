@@ -46,6 +46,7 @@ program.parse();
         }
     });
     
-    generateReport(sheet);
+    var mdReport = await generateReport(sheet);
+    console.log(mdReport);
     
 })();
