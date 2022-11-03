@@ -1,4 +1,4 @@
-# jdt-generator - by @Azecko
+# jdt-generator - by [Azecko](https://github.com/Azecko)
 > jdt-generator is a project created for the [EPFL](https://epfl.ch) ISAS-FSD
 > team to generate their weekly report directly without even thinking about it.
 ## How to use
