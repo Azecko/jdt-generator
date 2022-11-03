@@ -26,9 +26,9 @@ program
   .version('0.8.0');
 
 program.command('md')
-  .description('Generate a journal de travail between two dates as a MarkDown file, usage : `md --from=<Date> --to=<Date>`')
-  .requiredOption('--from <date>', 'Starting date, exemple : 2022-01-30')
-  .requiredOption('--to <date>', 'End date, exemple : 2022-12-29')
+  .description('Log your journal de travail as MarkDown format. Usage : `md --from=<Date> --to=<Date>`')
+  .requiredOption('--from <date>', 'Starting date, example : 2022-01-30')
+  .requiredOption('--to <date>', 'End date, example : 2022-12-29')
   .action((str, options) => {
     mode = "md"
     startDate = str.from
@@ -36,11 +36,11 @@ program.command('md')
   });
 
 program.command('email')
-  .description('Send an e-mail with your journal de travail to a specific email : `email --from=<Date> --to=<Date> --receiver=<Email> --subject=<String>`')
-  .requiredOption('--from <date>', 'Starting date, exemple : 2022-01-30')
-  .requiredOption('--to <date>', 'End date, exemple : 2022-12-29')
+  .description('Send an e-mail with your journal de travail to a specific email. Usage : `email --from=<Date> --to=<Date> --receiver=<Email> --subject=<String>`')
+  .requiredOption('--from <date>', 'Starting date, example : 2022-01-30')
+  .requiredOption('--to <date>', 'End date, example : 2022-12-29')
   .requiredOption('--receiver <email>', 'Email who will receive the email.')
-  .requiredOption('--subject <string>', 'Subject of the email, exemple : `--subject="My report of this weeK"`')
+  .requiredOption('--subject <string>', 'Subject of the email, example : `--subject="My report of this weeK"`')
   .action((str, options) => {
     mode = "email"
     startDate = str.from
