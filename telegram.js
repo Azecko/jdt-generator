@@ -4,6 +4,7 @@ const filterSheet = require('./lib/filterSheet');
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const showdown = require('showdown');
 const converter = new showdown.Converter();
+const { exec } = require('child_process');
 const moment = require('moment');
 require('dotenv').config();
 
@@ -23,19 +24,32 @@ async function telegram() {
         parse_mode: 'HTML',
         reply_markup: {
             inline_keyboard: [
-                [ { text: "Yes", callback_data: "yes" }, { text: "No", callback_data: "no" } ],
+                [ { text: `Send mail to ${process.env.TELEGRAM_MAIL}`, callback_data: "yes" } ],
+                [ { text: "Do not send mail", callback_data: "no" } ]
             ]
         }
     });
 
-    bot.action('yes', ctx => {
+    bot.action('yes', async ctx => {
         ctx.editMessageReplyMarkup();
-        ctx.reply('You clicked yes');
+        exec(`node index.js email --from=${prevMonday.toISOString().split('T')[0]} --to=${friday.toISOString().split('T')[0]} --receiver="${process.env.TELEGRAM_MAIL}" --subject="${process.env.TELEGRAM_MAIL_SUBJECT}"`, (err, stdout, stderr) => {
+            if (err) {
+              bot.telegram.sendMessage(process.env.CHAT_ID, 'I got a problem sending the email !');
+              return;
+            }
+
+            bot.telegram.sendMessage(process.env.CHAT_ID, `Email has been sent to ${process.env.TELEGRAM_MAIL}`);
+
+            bot.stop();
+        });          
     });
 
-    bot.action('no', ctx => {
+    bot.action('no', async ctx => {
         ctx.editMessageReplyMarkup();
-        ctx.reply('You clicked no');
+        
+        bot.telegram.sendMessage(process.env.CHAT_ID, `Okay, I'm not sending an email for this JDT.`)
+
+        bot.stop();    
     });
 
     bot.launch();
