@@ -4,6 +4,7 @@ const filterSheet = require('./lib/filterSheet');
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const showdown = require('showdown');
 const converter = new showdown.Converter();
+const moment = require('moment');
 require('dotenv').config();
 
 async function telegram() {
@@ -11,8 +12,7 @@ async function telegram() {
     var prevMonday = new Date();
     prevMonday.setDate((prevMonday.getDate() - (prevMonday.getDay() + 6) % 7) -1);
 
-    var friday = new Date();
-    friday.setDate(prevMonday.getDate() + 4);
+    var friday = moment(prevMonday).add('5', 'days');
 
     var jdtFiltered = await filterSheet(prevMonday, friday)
     var mdReport = await generateTelegramMessage(jdtFiltered);
