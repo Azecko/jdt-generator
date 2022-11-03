@@ -4,6 +4,7 @@ const sendMail = require("./lib/sendMail");
 const { program } = require('commander');
 const moment = require("moment");
 const showdown = require("showdown");
+const filterSheet = require("./lib/filterSheet");
 const converter = new showdown.Converter({tables: 'true'});
 
 let mode;
@@ -57,16 +58,9 @@ program.parse();
     }
     startDate = new Date(startDate);
     endDate = new Date(endDate)
-
-    let sheet = await getSpreadSheet();
     startDate.setDate(startDate.getDate()-1);
 
-    sheet = sheet.filter(row => {
-        if(row.morning_start && row.morning_end && row.afternoon_start && row.afternoon_end) {
-            let rowDate = moment(row.date, "DD/MM/YYYY").toDate();
-            return moment(rowDate).isBetween(startDate, endDate);
-        }
-    });
+    let sheet = await filterSheet(startDate, endDate)
     
     var mdReport = await generateReport(sheet);
     switch (mode) {
