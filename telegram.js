@@ -29,46 +29,49 @@ async function telegram() {
                 [ { text: "Do not send mail", callback_data: "no" } ]
             ]
         }
-    }).then(ctx => {
-        const messageId = ctx.message_id;
-        setTimeout(() => {
+    }).then(message => {
+        const messageId = message.message_id;
+        var timeout = setTimeout(() => {
             bot.telegram.editMessageReplyMarkup(process.env.CHAT_ID, messageId);
             bot.telegram.sendMessage(process.env.CHAT_ID, `You forgot to choose in the last 24 hours so I'm not sending anything !`);
 
             bot.stop();
         }, 86400000)
+
+        bot.action('yes', async ctx => {
+            ctx.editMessageReplyMarkup();
+            const css = `<style>
+            table {
+              border: 1px solid gray;
+              border-spacing: 0px;
+              border-collapse: separate;
+            }
+            th, td {
+              border: 1px solid gray;
+              padding: 10px;
+            }
+            </style>`
+            var mdReport = await generateReport(jdtFiltered);
+            var html = converter.makeHtml(css + mdReport);
+            await sendMail(process.env.TELEGRAM_MAIL, process.env.TELEGRAM_MAIL_SUBJECT, html);
+    
+            bot.telegram.sendMessage(process.env.CHAT_ID, `Email has been sent to ${process.env.TELEGRAM_MAIL}`);
+
+            clearTimeout(timeout);
+    
+            bot.stop();        
+        });
+    
+        bot.action('no', async ctx => {
+            ctx.editMessageReplyMarkup();
+            
+            bot.telegram.sendMessage(process.env.CHAT_ID, `Okay, I'm not sending an email for this JDT.`);
+    
+            clearTimeout(timeout);
+    
+            bot.stop();    
+        });
     })
-
-
-    bot.action('yes', async ctx => {
-        ctx.editMessageReplyMarkup();
-        const css = `<style>
-        table {
-          border: 1px solid gray;
-          border-spacing: 0px;
-          border-collapse: separate;
-        }
-        th, td {
-          border: 1px solid gray;
-          padding: 10px;
-        }
-        </style>`
-        var mdReport = await generateReport(jdtFiltered);
-        var html = converter.makeHtml(css + mdReport);
-        await sendMail(process.env.TELEGRAM_MAIL, process.env.TELEGRAM_MAIL_SUBJECT, html);
-
-        bot.telegram.sendMessage(process.env.CHAT_ID, `Email has been sent to ${process.env.TELEGRAM_MAIL}`);
-
-        bot.stop();        
-    });
-
-    bot.action('no', async ctx => {
-        ctx.editMessageReplyMarkup();
-        
-        bot.telegram.sendMessage(process.env.CHAT_ID, `Okay, I'm not sending an email for this JDT.`)
-
-        bot.stop();    
-    });
 
     bot.launch();
 }
