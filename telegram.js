@@ -29,7 +29,16 @@ async function telegram() {
                 [ { text: "Do not send mail", callback_data: "no" } ]
             ]
         }
-    });
+    }).then(ctx => {
+        const messageId = ctx.message_id;
+        setTimeout(() => {
+            bot.telegram.editMessageReplyMarkup(process.env.CHAT_ID, messageId);
+            bot.telegram.sendMessage(process.env.CHAT_ID, `You forgot to choose in the last 24 hours so I'm not sending anything !`);
+
+            bot.stop();
+        }, 86400000)
+    })
+
 
     bot.action('yes', async ctx => {
         ctx.editMessageReplyMarkup();
