@@ -1,0 +1,10 @@
+version: "3"
+services:
+  node:
+    image: "node:latest"
+    container_name: "jdt-generator"
+    user: "node"
+    working_dir: /home/node/app
+    volumes:
+      - ./:/home/node/app
+    command: "node telegram"
