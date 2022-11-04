@@ -5,7 +5,6 @@ const sendMail = require('./lib/sendMail');
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const showdown = require('showdown');
 const converter = new showdown.Converter({tables: 'true'});
-const { exec } = require('child_process');
 const moment = require('moment');
 const generateReport = require('./lib/generateReport');
 require('dotenv').config();
