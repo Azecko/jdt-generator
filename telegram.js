@@ -1,6 +1,7 @@
 const { Telegraf } = require('telegraf');
 const generateTelegramMessage = require('./lib/generateTelegramMessage');
 const filterSheet = require('./lib/filterSheet');
+const sendMail = require('./lib/sendMail');
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const showdown = require('showdown');
 const converter = new showdown.Converter();
@@ -32,16 +33,23 @@ async function telegram() {
 
     bot.action('yes', async ctx => {
         ctx.editMessageReplyMarkup();
-        exec(`node index.js email --from=${prevMonday.toISOString().split('T')[0]} --to=${friday.toISOString().split('T')[0]} --receiver="${process.env.TELEGRAM_MAIL}" --subject="${process.env.TELEGRAM_MAIL_SUBJECT}"`, (err, stdout, stderr) => {
-            if (err) {
-              bot.telegram.sendMessage(process.env.CHAT_ID, 'I got a problem sending the email !');
-              return;
-            }
+        const css = `<style>
+        table {
+          border: 1px solid gray;
+          border-spacing: 0px;
+          border-collapse: separate;
+        }
+        th, td {
+          border: 1px solid gray;
+          padding: 10px;
+        }
+        </style>`
+        var html = converter.makeHtml(css + mdReport);
+        await sendMail(process.env.TELEGRAM_MAIL, process.env.TELEGRAM_MAIL_SUBJECT, html);
 
-            bot.telegram.sendMessage(process.env.CHAT_ID, `Email has been sent to ${process.env.TELEGRAM_MAIL}`);
+        bot.telegram.sendMessage(process.env.CHAT_ID, `Email has been sent to ${process.env.TELEGRAM_MAIL}`);
 
-            bot.stop();
-        });          
+        bot.stop();        
     });
 
     bot.action('no', async ctx => {
