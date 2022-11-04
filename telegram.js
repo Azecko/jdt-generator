@@ -4,9 +4,10 @@ const filterSheet = require('./lib/filterSheet');
 const sendMail = require('./lib/sendMail');
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const showdown = require('showdown');
-const converter = new showdown.Converter();
+const converter = new showdown.Converter({tables: 'true'});
 const { exec } = require('child_process');
 const moment = require('moment');
+const generateReport = require('./lib/generateReport');
 require('dotenv').config();
 
 async function telegram() {
@@ -44,6 +45,7 @@ async function telegram() {
           padding: 10px;
         }
         </style>`
+        var mdReport = await generateReport(jdtFiltered);
         var html = converter.makeHtml(css + mdReport);
         await sendMail(process.env.TELEGRAM_MAIL, process.env.TELEGRAM_MAIL_SUBJECT, html);
 
