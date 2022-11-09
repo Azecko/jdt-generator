@@ -1,11 +1,11 @@
 {
   "name": "jdt-generator",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "description": "A \"journal de travail\" generator for the EPFL ISAS-FSD team.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "telegram": "npm i && node telegram.js"
+    "telegram": "npm i --no-fund && node telegram.js"
   },
   "repository": {
     "type": "git",
