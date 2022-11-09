@@ -7,4 +7,4 @@ services:
     working_dir: /home/node/app
     volumes:
       - ./:/home/node/app
-    command: "node telegram"
+    command: "npm run telegram"
